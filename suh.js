@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const _ = require('lodash');
 const path = require('path');
+require('dotenv').config()
 
 const client = new Discord.Client();
 
@@ -37,5 +38,4 @@ client.on("voiceStateUpdate", (oldState, newState) => {
   }
 });
 
-const token = 'NzAzMDA4NzIyNDM1MzA5NjU5.XqIW9Q.YbwkHJ2jZeMBQxPCB60pVKOzCDI';
-client.login(token);
+client.login(process.env.DISCORD_TOKEN);
