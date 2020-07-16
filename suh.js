@@ -11,10 +11,13 @@ client.on('ready', () => {
 
 const CHIP = '259184609051410432';
 const WILL = '689128844015435792';
+const RANDY = '260502471145816064';
+
+const suhDuders = [CHIP, WILL, RANDY];
 
 client.on("voiceStateUpdate", (oldState, newState) => {
-  const moved = (dude) => oldState.member.user.id === dude && newState.member.user.id === dude
-  if ((moved(CHIP) || moved(WILL)) && oldState.channelID !== newState.channelID) {
+  const suhDuderMoved = () => suhDuders.includes(newState.member.user.id);
+  if (suhDuderMoved() && oldState.channelID !== newState.channelID) {
     const channel = newState.channel;
     if (!channel) {
       return;
