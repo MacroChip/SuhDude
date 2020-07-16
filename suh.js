@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const _ = require('lodash');
+const path = require('path');
 
 const client = new Discord.Client();
 
@@ -17,7 +18,8 @@ client.on("voiceStateUpdate", (oldState, newState) => {
         const channel = newState.channel;
         channel.join().then(connection => {
           setTimeout(() => {
-                const clip = `/c/discord/audio/suh${_.sample([1, 2, 3])}.m4a`;
+                const suhNumber = _.sample([1, 2, 3]);
+                const clip = path.join(__dirname, `suh${suhNumber}.m4a`);
                 console.log(clip);
                 const player = connection.play(clip);
                 player.on('finish', () => {
