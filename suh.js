@@ -23,10 +23,12 @@ client.on("voiceStateUpdate", (oldState, newState) => {
                 const suhNumber = _.sample([1, 2, 3]);
                 const clip = path.join(__dirname, `suh${suhNumber}.m4a`);
                 console.log(clip);
-                const player = connection.play(clip);
-                player.on('finish', () => {
-                  channel.leave();
-                  console.log(new Date(), 'suh');
+                const dispatcher = connection.play(clip);
+                dispatcher.on('finish', () => {
+                  setTimeout(() => {
+                    channel.leave();
+                    console.log(new Date(), 'suh');
+                  }, 1500);
                 });
             }, 1000);
         }).catch(err => {
