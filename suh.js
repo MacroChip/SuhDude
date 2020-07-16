@@ -13,9 +13,11 @@ const WILL = '689128844015435792';
 
 client.on("voiceStateUpdate", (oldState, newState) => {
     const moved = (dude) => oldState.member.user.id === dude && newState.member.user.id === dude
-    if ((moved(CHIP) || moved(WILL)) && oldState.channelID !== newState.channelID
-    ) {
+    if ((moved(CHIP) || moved(WILL)) && oldState.channelID !== newState.channelID) {
         const channel = newState.channel;
+        if (!channel) {
+          return;
+        }
         channel.join().then(connection => {
           setTimeout(() => {
                 const suhNumber = _.sample([1, 2, 3]);
