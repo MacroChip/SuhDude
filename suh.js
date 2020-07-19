@@ -34,7 +34,10 @@ const prepare = (clip, channel) => {
 }
 
 const normalizeClip = (clip) => {
-  if (clip.startsWith('http')) {
+  console.log(clip)
+  if (Array.isArray(clip)) {
+    return normalizeClip(_.sample(clip));
+  } else if (clip.startsWith('http')) {
     return ytdl(clip);
   } else {
     return path.join(__dirname, clip);
