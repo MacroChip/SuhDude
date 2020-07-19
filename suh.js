@@ -4,7 +4,7 @@ const path = require('path');
 require('dotenv').config();
 const ytdl = require('ytdl-core');
 const fs = require('fs');
-const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+const config = JSON.parse(fs.readFileSync(process.env.CONFIG_FILE, 'utf8'));
 
 const client = new Discord.Client();
 
