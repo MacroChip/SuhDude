@@ -1,0 +1,48 @@
+{
+    "users": {
+        "259184609051410432": "CHIP",
+        "689128844015435792": "WILL",
+        "260502471145816064": "RANDY",
+        "358252088104452098": "HUBB",
+        "689121444428513363": "KEVIN",
+        "420806317939228673": "KYLE",
+        "184417096757673984": "BEN",
+        "688133957979472060": "HARHAUSEN",
+        "322203270086918144": "JOEL",
+        "383662184292417536": "AMY",
+        "691635103314608158": "SCOTT",
+        "689118702016135209": "BRIGHT",
+        "689129765042782284": "ROB"
+    },
+    "fileResolvers": {
+        "suhDude": ["suh1.m4a", "suh2.m4a", "suh3.m4a"],
+        "gucciGang": "gucciGang.ogg",
+        "ackshually": "https://www.youtube.com/watch?v=yoKwAK7fnNA",
+        "dillydilly": "https://www.youtube.com/watch?v=d7Vt3X4Jhsk",
+        "cena": "https://www.youtube.com/watch?v=abiNbJDpfp8",
+        "weed": "https://www.youtube.com/watch?v=2fbNyyrPrco",
+        "tacobell": "https://www.youtube.com/watch?v=Hx6n8Z-DbTk",
+        "shirley": "https://www.youtube.com/watch?v=WGU77QI0-9s",
+        "pee": "https://www.youtube.com/watch?v=SJlolhuyMKY",
+        "coffee": "https://www.youtube.com/watch?v=UdpMWbsdno0",
+        "pickle": "https://www.youtube.com/watch?v=ML5UI-0JS_Q",
+        "gotem": "https://www.youtube.com/watch?v=wnedkVrgFF0",
+        "asmr": "https://www.youtube.com/watch?v=F25pc-hb4PQ",
+        "masterchief": "https://www.youtube.com/watch?v=oD5mQoPpxr4"
+    },
+    "choiceByDiscordId": {
+        "CHIP": "ackshually",
+        "WILL": "suhDude",
+        "RANDY": "suhDude",
+        "HUBB": "gucciGang",
+        "BEN": "cena",
+        "KEVIN": "shirley",
+        "KYLE": "pee",
+        "HARHAUSEN": "dillydilly",
+        "JOEL": "pickle",
+        "AMY": "tacobell",
+        "SCOTT": "gotem",
+        "BRIGHT": "weed",
+        "ROB": "asmr"
+    }
+}
