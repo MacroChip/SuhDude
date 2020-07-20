@@ -5,6 +5,7 @@ require('dotenv').config();
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const config = JSON.parse(fs.readFileSync(process.env.CONFIG_FILE, 'utf8'));
+const COMMONS_CHANNEL_ID = '689101517503856778';
 
 const client = new Discord.Client();
 
@@ -12,9 +13,9 @@ client.on('ready', () => {
   console.log('** suh dude **');
 })
 
-const playClip = async (clip, connection, channel) => {
+const playClip = async (clip, connection, channel, options) => {
   const dispatcher = connection.play(clip);
-  dispatcher.setVolume(0.7)
+  dispatcher.setVolume(options.volume)
   dispatcher.on('finish', () => {
     setTimeout(() => {
       channel.leave();
@@ -23,10 +24,10 @@ const playClip = async (clip, connection, channel) => {
   });
 }
 
-const prepare = (clip, channel) => {
+const prepare = (clip, channel, options) => {
   channel.join().then(connection => {
     setTimeout(() => {
-      playClip(clip, connection, channel);
+      playClip(clip, connection, channel, options);
     }, 1000);
   }).catch(err => {
     console.log(err);
@@ -44,6 +45,20 @@ const normalizeClip = (clip) => {
   }
 }
 
+const makeOptions = (choice) => {
+  return {
+    volume: choice === 'cena' ? 0.2 : 0.7
+  }
+}
+
+const kevinInCommons = (username, channelID) => {
+  if (channelID !== COMMONS_CHANNEL_ID) {
+    return true
+  } else {
+    return username === 'KEVIN'
+  }
+}
+
 client.on("voiceStateUpdate", async (oldState, newState) => {
   if (oldState.channelID !== newState.channelID) {
     const channel = newState.channel;
@@ -51,12 +66,13 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
       return;
     }
     const username = config.users[newState.member.user.id];
-    if (username) {
+    if (username && kevinInCommons(username, newState.channelID)) {
       const choice = config.choiceByDiscordId[username];
       if (choice) {
-        console.log(`Got choice ${choice} for ${username} with id ${newState.member.user.id}`);
+        console.log(`Got choice ${choice} for ${username} (user id ${newState.member.user.id})`);
         const clip = config.fileResolvers[choice];
-        prepare(normalizeClip(clip), channel);
+        const options = makeOptions(choice);
+        prepare(normalizeClip(clip), channel, options);
       }
     }
   }
