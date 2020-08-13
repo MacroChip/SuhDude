@@ -12,7 +12,8 @@
         "383662184292417536": "AMY",
         "691635103314608158": "SCOTT",
         "689118702016135209": "BRIGHT",
-        "689129765042782284": "ROB"
+        "689129765042782284": "ROB",
+        "319250649004900354": "BRIT"
     },
     "fileResolvers": {
         "suhDude": ["suh1.m4a", "suh2.m4a", "suh3.m4a"],
@@ -28,7 +29,9 @@
         "pickle": "https://www.youtube.com/watch?v=ML5UI-0JS_Q",
         "gotem": "https://www.youtube.com/watch?v=wnedkVrgFF0",
         "asmr": "https://www.youtube.com/watch?v=F25pc-hb4PQ",
-        "masterchief": "https://www.youtube.com/watch?v=oD5mQoPpxr4"
+        "masterchief": "https://www.youtube.com/watch?v=oD5mQoPpxr4",
+        "legend27": "https://www.youtube.com/watch?v=OOZ_1llWAZ4",
+        "raid": "https://www.youtube.com/watch?v=F7Io9p73ReI"
     },
     "choiceByDiscordId": {
         "CHIP": "ackshually",
@@ -37,12 +40,12 @@
         "HUBB": "gucciGang",
         "BEN": "cena",
         "KEVIN": "shirley",
-        "KYLE": "pee",
         "HARHAUSEN": "dillydilly",
         "JOEL": "pickle",
         "AMY": "tacobell",
         "SCOTT": "gotem",
         "BRIGHT": "weed",
-        "ROB": "asmr"
+        "ROB": "asmr",
+        "BRIT": "raid"
     }
 }
