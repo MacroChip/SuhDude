@@ -47,7 +47,7 @@ const normalizeClip = (clip) => {
 
 const makeOptions = (choice) => {
   return {
-    volume: choice === 'cena' ? 0.2 : 0.7
+    volume: choice === 'cena' ? 0.07 : 0.7
   }
 }
 
