@@ -4,6 +4,7 @@
   "description": "",
   "main": "suh.js",
   "scripts": {
+    "start": "node suh.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -12,6 +13,7 @@
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
+    "ffmpeg-static": "^4.2.7",
     "lodash": "^4.17.19",
     "ytdl-core": "^3.1.2"
   }

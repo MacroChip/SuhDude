@@ -3,8 +3,7 @@ const _ = require('lodash');
 const path = require('path');
 require('dotenv').config();
 const ytdl = require('ytdl-core');
-const fs = require('fs');
-const config = JSON.parse(fs.readFileSync(process.env.CONFIG_FILE, 'utf8'));
+const config = require("./config.js");
 const COMMONS_CHANNEL_ID = '689101517503856778';
 
 const client = new Discord.Client();
