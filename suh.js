@@ -3,10 +3,18 @@ const _ = require('lodash');
 const path = require('path');
 require('dotenv').config();
 const ytdl = require('ytdl-core');
-const config = require("./config.js");
-const COMMONS_CHANNEL_ID = '689101517503856778';
+const Client = require('pg').Client;
 
 const client = new Discord.Client();
+
+const db = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+db.connect();
 
 client.on('ready', () => {
   console.log('** suh dude **');
@@ -43,20 +51,9 @@ const normalizeClip = (clip) => {
     return path.join(__dirname, clip);
   }
 }
-
-const makeOptions = (choice) => {
-  return {
-    volume: choice === 'cena' ? 0.07 : 0.7
-  }
-}
-
-const kevinInCommons = (username, channelID) => {
-  if (channelID !== COMMONS_CHANNEL_ID) {
-    return true
-  } else {
-    return username === 'KEVIN'
-  }
-}
+const makeOptions = (choice) => ({
+  volume: choice === 'cena' ? 0.07 : 0.7
+});
 
 client.on("voiceStateUpdate", async (oldState, newState) => {
   if (oldState.channelID !== newState.channelID) {
@@ -64,15 +61,14 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
     if (!channel) {
       return;
     }
-    const username = config.users[newState.member.user.id];
-    if (username && kevinInCommons(username, newState.channelID)) {
-      const choice = config.choiceByDiscordId[username];
-      if (choice) {
-        console.log(`Got choice ${choice} for ${username} (user id ${newState.member.user.id})`);
-        const clip = config.fileResolvers[choice];
-        const options = makeOptions(choice);
-        prepare(normalizeClip(clip), channel, options);
-      }
+    const result = await db.query(`SELECT * FROM config WHERE ID = $1;`, [newState.member.user.id]);
+    console.log(`DB query`, result);
+    const resultRow = result.rows[0];
+    if (resultRow) {
+      const choice = resultRow.url;
+      console.log(`Got choice ${choice} for ${resultRow.name} (user id ${newState.member.user.id})`);
+      const options = makeOptions(choice);
+      prepare(normalizeClip(choice), channel, options);
     }
   }
 });

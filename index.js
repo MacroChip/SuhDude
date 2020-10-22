@@ -6,6 +6,7 @@ const join = require('path').join;
 const cors = require('@koa/cors');
 const mount = require('koa-mount');
 const bodyparser = require('koa-bodyparser');
+const Client = require('pg').Client;
 
 const app = new Koa();
 const router = new Router();
@@ -35,7 +36,7 @@ router.post('/change', ctx => {
     const body = ctx.request.body;
     if (body.word === process.env.PASSWORD) {
         console.log(`Password correct:`, body);
-        db.query('INSERT INTO config VALUES($1, $2, $3);', [body.id, body.name, body.url])
+        db.query('INSERT INTO config VALUES($1, $2, $3) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3;', [body.id, body.name, body.url])
             .then(res => {
                 for (let row of res.rows) {
                     console.log(JSON.stringify(row));
