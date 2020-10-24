@@ -27,7 +27,8 @@ db.connect();
 db.query(`CREATE TABLE IF NOT EXISTS config (
     id varchar(64) PRIMARY KEY,
     name varchar(64) NOT NULL,
-    url varchar(200) NOT NULL
+    url varchar(200) NOT NULL,
+    volume varchar(10) NOT NULL
 )`)
     .then(res => console.log(`Made or found config table`))
     .catch(err => console.log(`Error making config table`, err));
@@ -36,7 +37,13 @@ router.post('/change', ctx => {
     const body = ctx.request.body;
     if (body.word === process.env.PASSWORD) {
         console.log(`Password correct:`, body);
-        db.query('INSERT INTO config VALUES($1, $2, $3) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3;', [body.id, body.name, body.url])
+        const volume = parseFloat(body.volume, 10);
+        if (volume > 1 || volume < 0) {
+            ctx.response.body = "Invalid volume";
+            ctx.response.status = 400;
+            return;
+        }
+        db.query('INSERT INTO config VALUES($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4;', [body.id, body.name, body.url, body.volume])
             .then(res => {
                 for (let row of res.rows) {
                     console.log(JSON.stringify(row));

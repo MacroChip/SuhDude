@@ -51,8 +51,8 @@ const normalizeClip = (clip) => {
     return path.join(__dirname, clip);
   }
 }
-const makeOptions = (choice) => ({
-  volume: choice === 'cena' ? 0.07 : 0.7
+const makeOptions = (config) => ({
+  volume: parseFloat(config.volume, 10),
 });
 
 client.on("voiceStateUpdate", async (oldState, newState) => {
@@ -66,8 +66,8 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
     const resultRow = result.rows[0];
     if (resultRow) {
       const choice = resultRow.url;
-      console.log(`Got choice ${choice} for ${resultRow.name} (user id ${newState.member.user.id})`);
-      const options = makeOptions(choice);
+      console.log(`Got result row ${resultRow} (user id ${newState.member.user.id})`);
+      const options = makeOptions(resultRow);
       prepare(normalizeClip(choice), channel, options);
     }
   }
