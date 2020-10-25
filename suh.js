@@ -66,7 +66,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
     const resultRow = result.rows[0];
     if (resultRow) {
       const choice = resultRow.url;
-      console.log(`Got result row ${resultRow} (user id ${newState.member.user.id})`);
+      console.log(`Got result row ${JSON.stringify(resultRow, null, 2)} (user id ${newState.member.user.id})`);
       const options = makeOptions(resultRow);
       prepare(normalizeClip(choice), channel, options);
     }

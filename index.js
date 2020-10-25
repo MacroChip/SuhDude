@@ -43,7 +43,7 @@ router.post('/change', ctx => {
             ctx.response.status = 400;
             return;
         }
-        db.query('INSERT INTO config VALUES($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4;', [body.id, body.name, body.url, body.volume])
+        db.query('INSERT INTO config VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4;', [body.id, body.name, body.url, body.volume])
             .then(res => {
                 for (let row of res.rows) {
                     console.log(JSON.stringify(row));
