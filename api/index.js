@@ -12,7 +12,7 @@ const app = new Koa();
 const router = new Router();
 
 if (!process.env.PASSWORD) {
-    throw "Need to provide a password in PASSWORD environment variable";
+    throw "Need to provide a passphrase in PASSWORD environment variable";
 }
 
 const db = new Client({
@@ -35,8 +35,8 @@ db.query(`CREATE TABLE IF NOT EXISTS config (
 
 router.post('/change', ctx => {
     const body = ctx.request.body;
-    if (body.word === process.env.PASSWORD) {
-        console.log(`Password correct:`, body);
+    if (body.phrase === process.env.PASSWORD) {
+        console.log(`Passphrase correct:`, body);
         const volume = parseFloat(body.volume, 10);
         if (volume > 1 || volume < 0) {
             ctx.response.body = "Invalid volume";
@@ -57,8 +57,8 @@ router.post('/change', ctx => {
                 ctx.response.status = 500;
             });
     } else {
-        console.log(`Failed password attempt. User attempted with password: ${body.word}`);
-        ctx.response.body = `wrong secret word`;
+        console.log(`Failed passphrase attempt. User attempted with passphrase: ${body.phrase}`);
+        ctx.response.body = `wrong secret phrase`;
         ctx.response.status = 403;
     }
 });
