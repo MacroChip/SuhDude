@@ -69,6 +69,8 @@ router.post('/change', ctx => {
     }
 });
 
+router.get('/change', ctx => ctx.body = "It probably worked");
+
 const apiRoute = '/api'
 app
     .use(bodyparser())
