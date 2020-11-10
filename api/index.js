@@ -33,9 +33,9 @@ db.query(`CREATE TABLE IF NOT EXISTS config (
     .then(res => console.log(`Made or found config table`))
     .catch(err => console.log(`Error making config table`, err));
 
-db.query(`ALTER TABLE config ADD
-        ADD startTime varchar(64) NOT NULL
-        ADD endTime varchar(64) NOT NULL`)
+db.query(`ALTER TABLE config
+        ADD COLUMN IF NOT EXISTS startTime varchar(64),
+        ADD COLUMN IF NOT EXISTS endTime varchar(64)`)
     .then(res => console.log(`added startTime and endTime columns if they didn't exist`))
     .catch(err => console.log(`Error adding startTime and endTime columns`, err));
 
@@ -54,12 +54,13 @@ router.post('/change', ctx => {
                 for (let row of res.rows) {
                     console.log(JSON.stringify(row));
                 }
+                ctx.response.body = `${body.name} (ID ${body.id}) changed to ${body.url}`;
                 ctx.response.status = 200;
-                ctx.body = `${body.name} (ID ${body.id}) changed to ${body.url}`;
+                console.log(`${body.name} (ID ${body.id}) changed to ${body.url}`);
             })
             .catch(err => {
                 console.log(`Error making change`, err);
-                ctx.body = `Error`;
+                ctx.response.body = `Error`;
                 ctx.response.status = 500;
             });
     } else {
@@ -68,8 +69,6 @@ router.post('/change', ctx => {
         ctx.response.status = 403;
     }
 });
-
-router.get('/change', ctx => ctx.body = "It probably worked");
 
 const apiRoute = '/api'
 app

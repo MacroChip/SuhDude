@@ -5,6 +5,7 @@ require('dotenv').config();
 const ytdl = require('ytdl-core');
 const Client = require('pg').Client;
 const ffmpeg = require('ffmpeg-static');
+const child_process = require('child_process');
 
 const client = new Discord.Client();
 
@@ -76,8 +77,8 @@ const normalizeClip = async (clip, startTime, endTime) => {
 }
 const makeOptions = (config) => ({
   volume: parseFloat(config.volume, 10),
-  startTime: config.startTime,
-  endTime: config.endTime,
+  startTime: config.starttime,
+  endTime: config.endtime,
 });
 
 client.on("voiceStateUpdate", async (oldState, newState) => {
