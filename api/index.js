@@ -33,6 +33,12 @@ db.query(`CREATE TABLE IF NOT EXISTS config (
     .then(res => console.log(`Made or found config table`))
     .catch(err => console.log(`Error making config table`, err));
 
+db.query(`ALTER TABLE config ADD
+        ADD startTime varchar(64) NOT NULL
+        ADD endTime varchar(64) NOT NULL`)
+    .then(res => console.log(`added startTime and endTime columns if they didn't exist`))
+    .catch(err => console.log(`Error adding startTime and endTime columns`, err));
+
 router.post('/change', ctx => {
     const body = ctx.request.body;
     if (body.phrase === process.env.PASSWORD) {
@@ -43,7 +49,7 @@ router.post('/change', ctx => {
             ctx.response.status = 400;
             return;
         }
-        db.query('INSERT INTO config VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4;', [body.id, body.name, body.url, body.volume])
+        db.query('INSERT INTO config VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4, startTime = $5, endTime = $6;', [body.id, body.name, body.url, body.volume, body.startTime, body.endTime])
             .then(res => {
                 for (let row of res.rows) {
                     console.log(JSON.stringify(row));
