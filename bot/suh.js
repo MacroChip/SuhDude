@@ -44,8 +44,7 @@ const cutClip = async (ytdlVid, startTime, endTime) => {
 };
 
 const playClip = async (clip, connection, channel, options) => {
-  const dispatcher = connection.play(clip);
-  dispatcher.setVolume(options.volume)
+  const dispatcher = connection.play(clip, { volume: options.volume });
   dispatcher.on('finish', () => {
     setTimeout(() => {
       channel.leave();
