@@ -7,6 +7,9 @@ const cors = require('@koa/cors');
 const mount = require('koa-mount');
 const bodyparser = require('koa-bodyparser');
 const Client = require('pg').Client;
+const cutClip = require('./cutClip').cutClip;
+const fs = require('fs/promises');
+const ytdl = require('ytdl-core');
 
 const app = new Koa();
 const router = new Router();
@@ -39,7 +42,12 @@ db.query(`ALTER TABLE config
     .then(res => console.log(`added startTime and endTime columns if they didn't exist`))
     .catch(err => console.log(`Error adding startTime and endTime columns`, err));
 
-router.post('/change', ctx => {
+db.query(`ALTER TABLE config
+        ADD COLUMN IF NOT EXISTS clip bytea`)
+    .then(res => console.log(`added clip bytea column if it didn't exist`))
+    .catch(err => console.log(`Error adding clip column`, err));
+
+router.post('/change', async ctx => {
     const body = ctx.request.body;
     if (body.phrase === process.env.PASSWORD) {
         console.log(`Passphrase correct:`, body);
@@ -49,7 +57,9 @@ router.post('/change', ctx => {
             ctx.response.status = 400;
             return;
         }
-        db.query('INSERT INTO config VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4, startTime = $5, endTime = $6;', [body.id, body.name, body.url, body.volume, body.startTime, body.endTime])
+        const clip = await cutClip(ytdl(body.url), body.startTime, body.endTime);
+        const videoBinary = "\\x" + await fs.readFile(clip, 'hex');
+        db.query('INSERT INTO config VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4, startTime = $5, endTime = $6, clip = $7;', [body.id, body.name, body.url, body.volume, body.startTime, body.endTime, videoBinary])
             .then(res => {
                 for (let row of res.rows) {
                     console.log(JSON.stringify(row));
