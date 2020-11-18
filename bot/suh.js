@@ -15,7 +15,7 @@ const db = new Client({
 db.connect();
 
 client.on('ready', () => {
-  console.log('** suh dude **');
+  console.log('bot up');
 });
 
 const playClip = async (clip, connection, channel, options) => {
@@ -53,13 +53,15 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
       return;
     }
     const result = await db.query(`SELECT * FROM config WHERE ID = $1;`, [newState.member.user.id]);
-    console.log(`DB query`, result);
+    console.log(`DB query`, result.rows);
     const resultRow = result.rows[0];
-    if (resultRow) {
-      const choice = resultRow.url;
-      console.log(`Got result row ${JSON.stringify(resultRow, null, 2)} (user id ${newState.member.user.id})`);
+    console.log(`Got result row (minus clip) ${JSON.stringify({ ...resultRow, clip: undefined }, null, 2)} (user id ${newState.member.user.id})`);
+    const clip = resultRow?.clip;
+    if (clip) {
       const options = makeOptions(resultRow);
-      prepare(hexStringToReadableStream(choice), channel, options);
+      prepare(hexStringToReadableStream(clip), channel, options);
+    } else {
+      console.log(`User had no clip`);
     }
   }
 });
