@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const Client = require('pg').Client;
-const { Readable } = require('stream');
+const fs = require('fs/promises');
 
 const client = new Discord.Client();
 
@@ -21,14 +21,17 @@ client.on('ready', () => {
 const playClip = async (clip, connection, channel, options) => {
   const dispatcher = connection.play(clip, { volume: options.volume });
   dispatcher.on('finish', () => {
-    setTimeout(() => {
+    setTimeout(async () => {
       channel.leave();
       console.log(new Date(), 'finished');
+      await fs.unlink(clip);
+      console.log(`deleted`, clip);
     }, 1500);
   });
 }
 
 const prepare = (clip, channel, options) => {
+  console.log(`preparing ${clip}`);
   channel.join().then(connection => {
     setTimeout(() => {
       playClip(clip, connection, channel, options);
@@ -37,8 +40,6 @@ const prepare = (clip, channel, options) => {
     console.log(err);
   });
 }
-
-const hexStringToReadableStream = (hexString) => Readable.from(hexString.substring(2));
 
 const makeOptions = (config) => ({
   volume: parseFloat(config.volume, 10),
@@ -59,7 +60,9 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
     const clip = resultRow?.clip;
     if (clip) {
       const options = makeOptions(resultRow);
-      prepare(hexStringToReadableStream(clip), channel, options);
+      const file = Date.now() + '.mp4';
+      await fs.writeFile(file, clip);
+      prepare(file, channel, options);
     } else {
       console.log(`User had no clip`);
     }
