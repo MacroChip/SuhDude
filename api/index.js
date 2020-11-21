@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const koaStatic = require('koa-static');
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const join = require('path').join;
 const cors = require('@koa/cors');
 const mount = require('koa-mount');
@@ -57,7 +57,8 @@ router.post('/change', async ctx => {
             ctx.response.status = 400;
             return;
         }
-        const clip = await cutClip(ytdl(body.url), body.startTime, body.endTime);
+        const clip = await cutClip(ytdl(body.url), body.startTime, body.endTime); //can't wait for this. need a font end that polls for result or something
+        console.log(`done cutting clip`);
         const videoBinary = "\\x" + await fs.readFile(clip, 'hex');
         db.query('INSERT INTO config VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4, startTime = $5, endTime = $6, clip = $7;', [body.id, body.name, body.url, body.volume, body.startTime, body.endTime, videoBinary])
             .then(res => {

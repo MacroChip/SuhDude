@@ -7,6 +7,7 @@ const cutClip = async (ytdlVid, startTime, endTime) => {
         const bufs = [];
         ytdlVid.on('data', (buffer) => bufs.push(buffer));
         ytdlVid.on('end', async () => {
+            console.log(`got to end of file`);
             const OUTPUT_FILEPATH = Date.now() + '.mp4'; //TODO: delete this file after playing or put it in heroku temp area so that I dont care if its left around
             const videoAsBuffer = Buffer.concat(bufs);
             if (endTime) {
