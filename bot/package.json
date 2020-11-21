@@ -1,6 +1,9 @@
 {
   "name": "suh-bot",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.x"
+  },
   "description": "",
   "main": "suh.js",
   "scripts": {
@@ -13,6 +16,7 @@
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
+    "ffmpeg-static": "^4.2.7",
     "pg": "^8.4.1"
   }
 }
