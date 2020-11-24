@@ -28,6 +28,13 @@
         },
       })
         .then((res) => res.json())
+        .then((json) => {
+          if (json.error) {
+            throw json.error;
+          } else {
+            return json;
+          }
+        })
         .then((json) => json.uuid)
         .then((uuid) => pollForResult(uuid));
     });
