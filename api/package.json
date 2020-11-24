@@ -6,9 +6,21 @@
   },
   "description": "",
   "main": "index.js",
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.1",
+    "mini-css-extract-plugin": "^0.6.0",
+    "serve": "^11.0.0",
+    "style-loader": "^0.23.1",
+    "svelte": "^3.0.0",
+    "svelte-loader": "2.13.3",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.3.1"
+  },
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev": "webpack-dev-server --content-base public"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +34,7 @@
     "koa-router": "^9.4.0",
     "koa-static": "^5.0.0",
     "pg": "^8.4.1",
+    "uuid": "^8.3.1",
     "ytdl-core": "^3.0.0"
   }
 }

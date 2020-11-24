@@ -7,9 +7,10 @@ const cors = require('@koa/cors');
 const mount = require('koa-mount');
 const bodyparser = require('koa-bodyparser');
 const Client = require('pg').Client;
-const cutClip = require('./cutClip').cutClip;
-const fs = require('fs/promises');
-const ytdl = require('ytdl-core');
+const { v4: uuidv4 } = require('uuid');
+const changeUserConfig = require('./changeUserConfig').changeUserConfig;
+
+const results = new Map();
 
 const app = new Koa();
 const router = new Router();
@@ -53,32 +54,30 @@ router.post('/change', async ctx => {
         console.log(`Passphrase correct:`, body);
         const volume = parseFloat(body.volume, 10);
         if (volume > 1 || volume < 0) {
-            ctx.response.body = "Invalid volume";
+            ctx.response.body = { error: "Invalid volume" };
             ctx.response.status = 400;
             return;
         }
-        const clip = await cutClip(ytdl(body.url), body.startTime, body.endTime); //can't wait for this. need a font end that polls for result or something
-        console.log(`done cutting clip`);
-        const videoBinary = "\\x" + await fs.readFile(clip, 'hex');
-        db.query('INSERT INTO config VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO UPDATE SET name = $2, url = $3, volume = $4, startTime = $5, endTime = $6, clip = $7;', [body.id, body.name, body.url, body.volume, body.startTime, body.endTime, videoBinary])
-            .then(res => {
-                for (let row of res.rows) {
-                    console.log(JSON.stringify(row));
-                }
-                ctx.response.body = `${body.name} (ID ${body.id}) changed to ${body.url}`;
-                ctx.response.status = 200;
-                console.log(`${body.name} (ID ${body.id}) changed to ${body.url}`);
-            })
-            .catch(err => {
-                console.log(`Error making change`, err);
-                ctx.response.body = `Error`;
-                ctx.response.status = 500;
-            });
+        const uuid = uuidv4();
+        changeUserConfig(db, body)
+            .then(result => results.set(uuid, result))
+            .catch(err => results.set(uuid, err))
+        ctx.response.body = { uuid };
     } else {
         console.log(`Failed passphrase attempt. User attempted with passphrase: ${body.phrase}`);
-        ctx.response.body = `wrong secret phrase`;
+        ctx.response.body = { error: `wrong secret phrase` };
         ctx.response.status = 403;
     }
+});
+
+router.get('/status', async ctx => {
+    if (!ctx.request.query?.uuid) {
+        ctx.status = 412;
+        ctx.body = { error: "uuid is required" }
+        return;
+    }
+    const state = results.get(ctx.request.query?.uuid);
+    ctx.body = { state };
 });
 
 const apiRoute = '/api'
