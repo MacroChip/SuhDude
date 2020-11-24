@@ -48,6 +48,21 @@
 </script>
 
 <style>
+  @font-face {
+    font-family: "Source Code Pro";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Source Code Pro"), local("SourceCodePro-Regular"),
+      url(https://themes.googleusercontent.com/static/fonts/sourcecodepro/v4/mrl8jkM18OlOQN8JLgasDxM0YzuT7MdOe03otPbuUS0.woff)
+        format("woff");
+  }
+  :global(body) {
+    font-family: Source Code Pro;
+    background: #000;
+    color: #00ff00;
+    margin: 0;
+    font-size: 18px;
+  }
   img {
     display: block;
   }
