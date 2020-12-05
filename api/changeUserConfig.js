@@ -5,7 +5,7 @@ const ytdl = require('ytdl-core');
 const changeUserConfig = async (db, body) => {
     let ytdlVid;
     try {
-        ytdlVid = ytdl(body.url);
+        ytdlVid = ytdl(body.url, { filter: 'audioonly', quality: 'highestaudio' });
     } catch (e) {
         return { error: "Error in ytdl" + JSON.stringify(e) }; //why is e an empty object??
     }
