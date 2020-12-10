@@ -7,7 +7,8 @@ const changeUserConfig = async (db, body) => {
     try {
         ytdlVid = ytdl(body.url, { filter: 'audioonly', quality: 'highestaudio' });
     } catch (e) {
-        return { error: "Error in ytdl" + JSON.stringify(e) }; //why is e an empty object??
+        console.log(`ytdl error`, e);
+        return { error: "Error in ytdl: " + e.message };
     }
     const clip = await cutClip(ytdlVid, body.startTime, body.endTime);
     console.log(`done cutting clip`);
