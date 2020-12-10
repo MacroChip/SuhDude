@@ -27,7 +27,7 @@
           "content-type": "application/json",
         },
       })
-        .then((res) => res.json())
+        .then((res) => res.json()) //Promise.all of both the res.ok and json?
         .then((json) => {
           if (json.error) {
             throw json.error;
@@ -52,6 +52,23 @@
     }
     return state;
   };
+  const fragment = new URLSearchParams(window.location.hash.slice(1));
+  if (fragment.has("access_token")) {
+    const accessToken = fragment.get("access_token");
+    const tokenType = fragment.get("token_type");
+
+    fetch("https://discord.com/api/users/@me", {
+      headers: {
+        authorization: `${tokenType} ${accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        name = `${response.username}#${response.discriminator}`;
+        id = response.id;
+      })
+      .catch(console.error);
+  }
 </script>
 
 <style>
@@ -150,20 +167,33 @@
   button:first-letter {
     color: yellow;
   }
+  #login {
+    font-size: 3rem;
+  }
+  #loginLogo {
+    display: inline;
+  }
 </style>
 
 <svelte:head>
   <title>Chad bot</title>
 </svelte:head>
 <form>
-  <p>your name</p>
-  <input autofocus id="name" name="name" type="text" bind:value={name} />
-  <p>
-    your discord id (<a
-      href="https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-"
-      target="_blank">how to get it</a>)
-  </p>
-  <input id="id" name="id" type="text" bind:value={id} />
+  {#if !id}
+    <div>
+      <img
+        id="loginLogo"
+        height="60"
+        width="180"
+        src="https://discord.com/assets/e4923594e694a21542a489471ecffa50.svg"
+        alt="discrd logo" />
+      <a
+        id="login"
+        href="https://discord.com/api/oauth2/authorize?client_id=734126295427973161&redirect_uri=https%3A%2F%2Fasuhdude.herokuapp.com%2F&response_type=token&scope=identify">Login</a>
+    </div>
+  {:else}
+    <h2>{name} logged in (discord snowflake id {id})</h2>
+  {/if}
   <p>
     url for your new clip.
     <a
