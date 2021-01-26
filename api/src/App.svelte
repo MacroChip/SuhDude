@@ -226,7 +226,20 @@
   </details>
   <p>Super secret phrase that lets you pass</p>
   <input id="phrase" name="phrase" type="password" bind:value={phrase} />
-  <button on:click={submit}>Submit</button>
+  {#if id && url && phrase}
+    <button on:click={submit}>Submit</button>
+  {:else}
+    <div style="margin: 5px">To continue:</div>
+    {#if !id}
+      <div>Login with Discord</div>
+    {/if}
+    {#if !url}
+      <div>Enter youtube URL</div>
+    {/if}
+    {#if !phrase}
+      <div>Enter the secret phrase</div>
+    {/if}
+  {/if}
   <!--make type submit?-->
 </form>
 {#if searchPromise}
