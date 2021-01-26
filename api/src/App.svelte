@@ -195,10 +195,7 @@
     <h2>{name} logged in (discord snowflake id {id})</h2>
   {/if}
   <p>
-    url for your new clip.
-    <a
-      href="https://ytdl-org.github.io/youtube-dl/supportedsites.html"
-      target="_blank">list of supported sites</a>
+    YouTube url for your new clip.
   </p>
   <input id="url" name="url" type="text" bind:value={url} />
   <div style="margin: 5px">
