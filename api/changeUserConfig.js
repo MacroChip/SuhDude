@@ -3,6 +3,9 @@ const fs = require('fs/promises');
 const ytdl = require('ytdl-core');
 
 const changeUserConfig = async (db, body) => {
+    if (!await clipIsValidLength(body.url, body.startTime, body.endTime)) {
+        return Promise.reject({ error: `Clip needs to be less than ${process.env.LIMIT_IN_MS / 1000} seconds. Use the start and end time boxes to crop it.` });
+    }
     let ytdlVid;
     try {
         ytdlVid = ytdl(body.url, { filter: 'audioonly', quality: 'highestaudio' });
@@ -25,6 +28,37 @@ const changeUserConfig = async (db, body) => {
             console.log(`Error making change`, err);
             return { error: `Error` };
         });
+};
+
+const clipIsValidLength = async (url, startTime, endTime) => {
+    const limitInSeconds = process.env.LIMIT_IN_MS / 1000;
+    //manually eneter start and end makes it ok
+    if (endTime && startTime) {
+        const endTimeInSeconds = +(endTime.split(':').reduce((acc, time) => (60 * acc) + +time));
+        const startTimeInSeconds = +(startTime.split(':').reduce((acc, time) => (60 * acc) + +time));
+        if (endTimeInSeconds - startTimeInSeconds <= limitInSeconds) {
+            return true;
+        }
+    }
+    //video length already makes it ok without cropping
+    const info = await ytdl.getBasicInfo(url);
+    if (info.lengthSeconds <= limitInSeconds) {
+        return true;
+    }
+    //has a start time such that end of video results in ok length
+    if (startTime) {
+        const startTimeInSeconds = +(startTime.split(':').reduce((acc, time) => (60 * acc) + +time));
+        if (info.lengthSeconds - startTimeInSeconds <= limitInSeconds) {
+            return true;
+        }
+    }
+    if (endTime) {
+        const endTimeInSeconds = +(endTime.split(':').reduce((acc, time) => (60 * acc) + +time));
+        if (endTimeInSeconds <= limitInSeconds) {
+            return true;
+        }
+    }
+    return false;
 };
 
 module.exports = {
