@@ -34,32 +34,34 @@ const clipIsValidLength = async (url, startTime, endTime) => {
     const limitInSeconds = process.env.LIMIT_IN_MS / 1000;
     //manually eneter start and end makes it ok
     if (endTime && startTime) {
-        const endTimeInSeconds = +(endTime.split(':').reduce((acc, time) => (60 * acc) + +time));
-        const startTimeInSeconds = +(startTime.split(':').reduce((acc, time) => (60 * acc) + +time));
+        const endTimeInSeconds = durationStringToLengthSeconds(endTime);
+        const startTimeInSeconds = durationStringToLengthSeconds(startTime);
         if (endTimeInSeconds - startTimeInSeconds <= limitInSeconds) {
             return true;
         }
     }
     //video length already makes it ok without cropping
-    const info = await ytdl.getBasicInfo(url);
-    if (info.lengthSeconds <= limitInSeconds) {
+    const lengthSeconds = (await ytdl.getBasicInfo(url)).player_response.videoDetails.lengthSeconds;
+    if (lengthSeconds <= limitInSeconds) {
         return true;
     }
     //has a start time such that end of video results in ok length
     if (startTime) {
-        const startTimeInSeconds = +(startTime.split(':').reduce((acc, time) => (60 * acc) + +time));
-        if (info.lengthSeconds - startTimeInSeconds <= limitInSeconds) {
+        const startTimeInSeconds = durationStringToLengthSeconds(startTime);
+        if (lengthSeconds - startTimeInSeconds <= limitInSeconds) {
             return true;
         }
     }
     if (endTime) {
-        const endTimeInSeconds = +(endTime.split(':').reduce((acc, time) => (60 * acc) + +time));
+        const endTimeInSeconds = durationStringToLengthSeconds(endTime);
         if (endTimeInSeconds <= limitInSeconds) {
             return true;
         }
     }
     return false;
 };
+
+const durationStringToLengthSeconds = (durationString) => +(durationString.split(':').reduce((acc, time) => (60 * acc) + +time));
 
 module.exports = {
     changeUserConfig,
