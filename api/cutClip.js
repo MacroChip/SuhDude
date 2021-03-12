@@ -10,7 +10,13 @@ const cutClip = async (ytdlVid, startTime, endTime) => {
             console.log(`got to end of file`);
             const OUTPUT_FILEPATH = Date.now() + '.mp4'; //TODO: delete this file after playing or put it in heroku temp area so that I dont care if its left around
             const videoAsBuffer = Buffer.concat(bufs);
-            if (endTime) {
+            if (endTime || startTime) {
+                if (!endTime) {
+                    endTime = "59:59";
+                }
+                if (!startTime) {
+                    startTime = "0:0";
+                }
                 try {
                     child_process.execFileSync(ffmpeg, ['-i', 'pipe:', '-ss', startTime, '-to', endTime, OUTPUT_FILEPATH], { input: videoAsBuffer });
                 } catch (e) {
