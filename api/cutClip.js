@@ -21,8 +21,8 @@ const cutClip = async (ytdlVid, startTime, endTime) => {
                     child_process.execFileSync(ffmpeg, ['-i', 'pipe:', '-ss', startTime, '-to', endTime, OUTPUT_FILEPATH], { input: videoAsBuffer });
                 } catch (e) {
                     if (e.status != 0) {
-                        console.log("Non zero status after cutting clip: " + e.status);
-                        return rej(e);
+                        console.log("Non zero status after cutting clip: " + e.status + `. Code: ${e.code}`);
+                        return rej({ error: `Error cropping clip. Maybe your time format is unexpected or goes beyond the end of the clip (even by less than a second)` });
                     }
                 }
                 console.log("Done cutting clip");
