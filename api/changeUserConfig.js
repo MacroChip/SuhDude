@@ -31,7 +31,7 @@ const changeUserConfig = async (db, body) => {
 };
 
 const clipIsValidLength = async (url, startTime, endTime) => {
-    const limitInSeconds = process.env.LIMIT_IN_MS / 1000;
+    const limitInSeconds = (process.env.LIMIT_IN_MS || 5000) / 1000;
     //manually eneter start and end makes it ok
     if (endTime && startTime) {
         const endTimeInSeconds = durationStringToLengthSeconds(endTime);
