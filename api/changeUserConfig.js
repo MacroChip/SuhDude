@@ -25,7 +25,7 @@ const changeUserConfig = async (db, body) => {
             return { success: `${body.name} (ID ${body.id}) changed to ${body.url}` };
         })
         .catch(err => {
-            console.log(`Error making change`, err);
+            console.log(`Database error`, err);
             return { error: `Error` };
         });
 };

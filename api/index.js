@@ -61,7 +61,10 @@ router.post('/change', async ctx => {
         const uuid = uuidv4();
         changeUserConfig(db, body)
             .then(result => results.set(uuid, result))
-            .catch(err => results.set(uuid, err))
+            .catch(err => {
+                console.log(`error chaning user config`, err);
+                results.set(uuid, err);
+            })
         ctx.response.body = { uuid };
     } else {
         console.log(`Failed passphrase attempt. User attempted with passphrase: ${body.phrase}`);
