@@ -62,8 +62,8 @@ router.post('/change', async ctx => {
         changeUserConfig(db, body)
             .then(result => results.set(uuid, result))
             .catch(err => {
-                console.log(`error chaning user config`, err);
-                results.set(uuid, err);
+                console.log(`Error changing user config`, err);
+                results.set(uuid, { error: JSON.stringify(err) });
             })
         ctx.response.body = { uuid };
     } else {

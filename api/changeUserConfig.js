@@ -4,7 +4,7 @@ const ytdl = require('ytdl-core');
 
 const changeUserConfig = async (db, body) => {
     if (!await clipIsValidLength(body.url, body.startTime, body.endTime)) {
-        return Promise.reject({ error: `Clip needs to be less than ${process.env.LIMIT_IN_MS / 1000} seconds. Use the start and end time boxes to crop it.` });
+        return Promise.resolve({ error: `Clip needs to be less than ${process.env.LIMIT_IN_MS / 1000} seconds. Use the start and end time boxes to crop it.` });
     }
     let ytdlVid;
     try {
