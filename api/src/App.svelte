@@ -185,7 +185,7 @@
         id="loginLogo"
         height="60"
         width="180"
-        src="https://discord.com/assets/e4923594e694a21542a489471ecffa50.svg"
+        src="Discord-Logo.svg"
         alt="discrd logo" />
       <a
         id="login"
