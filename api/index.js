@@ -1,4 +1,8 @@
 const Koa = require('koa');
+const {
+    default: enforceHttps,
+    xForwardedProtoResolver: resolver
+} = require('koa-sslify');
 const Router = require('koa-router');
 const koaStatic = require('koa-static');
 require('dotenv').config({ path: '../.env' });
@@ -87,6 +91,10 @@ const apiRoute = '/api'
 app
     .use(bodyparser())
     .use(cors())
+    .use(enforceHttps({
+        resolver,
+        temporary: true,
+    }))
     .use(koaStatic(join(__dirname, 'public')))
     .use(mount(apiRoute, router.routes()))
     .use(mount(apiRoute, router.allowedMethods()));
